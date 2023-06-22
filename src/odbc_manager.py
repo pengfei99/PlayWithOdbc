@@ -79,6 +79,11 @@ class OdbcConnector:
 
 
 def connectSqlite():
+    """
+    This function calls a dsn mysqlitedb which uses a sqlite instance. It has two tables countries, and locations
+    :return:
+    :rtype:
+    """
     # Set up the connection parameters
     dsn = 'mysqlitedb;'
     odbcConn = OdbcConnector(dsn)
@@ -97,7 +102,13 @@ def connectSqlite():
     odbcConn.close()
 
 
-def connectDuckDb():
+def connectInMemoryDuckDb():
+    """
+    This function calls a dsn duckdb which uses a memory based duckdb instance. We can read a parquet file
+    directly. Or create a table by loading the parquet file.
+    :return:
+    :rtype:
+    """
     dsn = "duckdb;"
     server = OdbcConnector(dsn)
     # test 1: read parquet
@@ -115,9 +126,25 @@ def connectDuckDb():
     server.close()
 
 
+def connectFileBasedDuckDb():
+    """This function calls a dsn fduckdb which uses a file based duckdb instance. A table called sf_fire is
+    already loaded in this database. so we can query it directly"""
+    dsn = "fduckdb;"
+    server = OdbcConnector(dsn)
+    # test 1: read table sf_fire
+
+    # query1 = "select * from sf_fire limit 10;"
+    # server.executeQuery(query1)
+
+    # test 2: count total row
+    query2 = "select count(*) as total_row from sf_fire;"
+    server.executeQuery(query2)
+    server.close()
+
+
 def main():
     # connectSqlite()
-    connectDuckDb()
+    connectFileBasedDuckDb()
 
 
 if __name__ == "__main__":
