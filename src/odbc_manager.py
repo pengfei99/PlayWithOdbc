@@ -123,6 +123,9 @@ def connectInMemoryDuckDb():
     server.loadParquetFileToTable('/home/pengfei/data_set/sf_fire/sf_fire_snappy.parquet', "sf_fire")
     query2 = "select * from sf_fire limit 10;"
     server.executeQuery(query2)
+
+    query3 = "select count(*) as total_row from sf_fire;"
+    server.executeQuery(query3)
     server.close()
 
 
@@ -144,7 +147,8 @@ def connectFileBasedDuckDb():
 
 def main():
     # connectSqlite()
-    connectFileBasedDuckDb()
+    connectInMemoryDuckDb()
+    # connectFileBasedDuckDb()
 
 
 if __name__ == "__main__":
