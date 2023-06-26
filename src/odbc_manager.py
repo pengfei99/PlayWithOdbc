@@ -67,7 +67,7 @@ class OdbcConnector:
             columnSchema = columnSchema + f"{colName} {pyTypeToSqlType(colType)},"
         print(columnSchema)
 
-    def loadParquetFileToTable(self, parquetFilePath: str, targetTableName):
+    def loadParquetFileToTable(self, parquetFilePath: str, targetTableName: str) -> None:
         query = f"CREATE TABLE {targetTableName} AS SELECT * FROM '{parquetFilePath}'"
         result = self.cursor.execute(query)
         print(result)
@@ -147,8 +147,8 @@ def connectFileBasedDuckDb():
 
 def main():
     # connectSqlite()
-    connectInMemoryDuckDb()
-    # connectFileBasedDuckDb()
+    # connectInMemoryDuckDb()
+    connectFileBasedDuckDb()
 
 
 if __name__ == "__main__":
