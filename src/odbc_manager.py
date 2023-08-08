@@ -102,25 +102,27 @@ def connectSqlite():
     odbcConn.close()
 
 
-def connectInMemoryDuckDb():
+def connectInMemoryDuckDb(dsn: str, parquetFilePath: str):
     """
     This function calls a dsn duckdb which uses a memory based duckdb instance. We can read a parquet file
     directly. Or create a table by loading the parquet file.
+    :param dsn:
+    :type dsn:
+    :param parquetFilePath:
+    :type parquetFilePath:
     :return:
     :rtype:
     """
-    dsn = "duckdb;"
     server = OdbcConnector(dsn)
     # test 1: read parquet
-    # query1 = """select * from '/home/pengfei/data_set/sf_fire/sf_fire_snappy.parquet' limit 10;
-    #         """
-    # server.executeQuery(query1)
+    query1 = f"""select * from '{parquetFilePath}' limit 10;"""
+    server.executeQuery(query1)
 
     # test 2: generate schema
     # server.getTableSchemaInSQL(r"'/home/pengfei/data_set/sf_fire/sf_fire_snappy.parquet'")
 
     # test 3: load parquet to table
-    server.loadParquetFileToTable('/home/pengfei/data_set/sf_fire/sf_fire_snappy.parquet', "sf_fire")
+    server.loadParquetFileToTable(parquetFilePath, "sf_fire")
     query2 = "select * from sf_fire limit 10;"
     server.executeQuery(query2)
 
@@ -129,10 +131,10 @@ def connectInMemoryDuckDb():
     server.close()
 
 
-def connectFileBasedDuckDb():
+def connectFileBasedDuckDb(dsn: str):
     """This function calls a dsn fduckdb which uses a file based duckdb instance. A table called sf_fire is
     already loaded in this database. so we can query it directly"""
-    dsn = "fduckdb;"
+
     server = OdbcConnector(dsn)
     # test 1: read table sf_fire
 
@@ -146,9 +148,12 @@ def connectFileBasedDuckDb():
 
 
 def main():
+    dsn1 = "duckdb"
+    dsn2 = "fduckdb;"
+    filePath = '/home/pengfei/data_set/sf_fire/sf_fire_snappy.parquet'
     # connectSqlite()
-    # connectInMemoryDuckDb()
-    connectFileBasedDuckDb()
+    connectInMemoryDuckDb(dsn1, filePath)
+    # connectFileBasedDuckDb(dsn2)
 
 
 if __name__ == "__main__":
